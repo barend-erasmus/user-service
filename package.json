@@ -1,0 +1,48 @@
+{
+  "name": "user-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "build": "gulp build",
+    "lint": "tslint --fix --exclude ./src/**/config.* ./src/**/*.ts",
+    "start": "gulp build:dev & node ./dist/app.js",
+    "test": "gulp build:dev & mocha --timeout=5000 ./dist/**/*.test.js & gulp clean",
+    "cover": "gulp build:dev & istanbul cover node_modules/mocha/bin/_mocha --root ./dist ./dist/**/*.test.js & gulp clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barend-erasmus/user-service.git"
+  },
+  "author": "Barend Erasmus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/barend-erasmus/user-service/issues"
+  },
+  "homepage": "https://github.com/barend-erasmus/user-service#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.3",
+    "express": "^4.15.3",
+    "express-winston": "^2.4.0",
+    "path": "^0.12.7",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.38",
+    "@types/node": "^7.0.18",
+    "@types/sinon": "^2.1.2",
+    "@types/supertest": "^2.0.0",
+    "@types/winston": "^2.2.0",
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-typescript": "^3.1.6",
+    "mocha": "^3.4.1",
+    "run-sequence": "^1.2.2",
+    "supertest": "^3.0.0",
+    "typescript": "^2.3.2"
+  }
+}
