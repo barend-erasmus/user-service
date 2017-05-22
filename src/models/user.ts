@@ -1,14 +1,14 @@
 // Imports models
-import { Permission } from './permission';
-import { Role } from './role';
+import { UserPermission } from './user-permission';
+import { UserRole } from './user-role';
 
 export class User {
     constructor(
         public id: string,
         public username: string,
         public emailAddress: string,
-        public permissions: Permission[],
-        public roles: Role[],
+        public permissions: UserPermission[],
+        public roles: UserRole[],
         public isVerified: boolean,
         public lastLoginTimestamp: number) {
 
