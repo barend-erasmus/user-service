@@ -9,7 +9,8 @@ export class User {
         public emailAddress: string,
         public permissions: Permission[],
         public roles: Role[],
-        public isVerified: boolean) {
+        public isVerified: boolean,
+        public lastLoginTimestamp: number) {
 
     }
 }
