@@ -1,5 +1,5 @@
 export class RoleService {
-    constructor() {
-        
+    constructor(private roleRepository: any) {
+
     }
 }

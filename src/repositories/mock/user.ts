@@ -11,7 +11,7 @@ export class UserRepository implements IUserRepository {
     }
 
     public update(user: User): Promise<boolean> {
-        return null;
+        return Promise.resolve(true);
     }
 
     public list(): Promise<User[]> {

@@ -27,21 +27,38 @@ export class UserService {
     public register(username: string): Promise<User> {
         const self = this;
         return co(function*() {
-           const user: User = yield self.userRepository.findByUsername(username);
+            const user: User = yield self.userRepository.findByUsername(username);
 
-           if (user !== null) {
+            if (user !== null) {
                 return null;
             }
 
-           const newUser: User = new User(uuid.v4(), username, null, [], [], false, new Date().getTime());
+            const newUser: User = new User(uuid.v4(), username, null, [], [], false, new Date().getTime());
 
-           yield self.userRepository.create(newUser);
+            yield self.userRepository.create(newUser);
 
-           return newUser;
+            return newUser;
         });
     }
 
     public find(username): Promise<User> {
         return this.userRepository.findByUsername(username);
+    }
+
+    public login(username: string): Promise<boolean> {
+        const self = this;
+        return co(function*() {
+             const user: User = yield self.userRepository.findByUsername(username);
+
+             if (user === null) {
+                return false;
+            }
+
+             user.lastLoginTimestamp = new Date().getTime();
+
+             yield self.userRepository.update(user);
+
+             return true;
+        });
     }
 }

@@ -1,5 +1,5 @@
 export class PermissionService {
-    constructor() {
-        
+    constructor(private permissionRepository: any) {
+
     }
 }

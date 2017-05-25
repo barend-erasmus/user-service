@@ -35,17 +35,20 @@ describe('UserService', () => {
 
   describe('register', () => {
     let userService: UserService = null;
+    let userRepositoryCreateSpy: sinon.SinonSpy = null;
 
     beforeEach(() => {
       const userRepository = new UserRepository();
 
       sinon.stub(userRepository, 'findByUsername').callsFake((username: string) => {
-                if (username === 'demousername1') {
-                    return Promise.resolve(new User(null, null, null, null, null, null, null));
-                }else {
-                   return Promise.resolve(null);
-                }
-            });
+        if (username === 'demousername1') {
+          return Promise.resolve(new User(null, null, null, null, null, null, null));
+        } else {
+          return Promise.resolve(null);
+        }
+      });
+
+      userRepositoryCreateSpy = sinon.spy(userRepository, "create");
 
       userService = new UserService('secretkey', userRepository);
 
@@ -67,6 +70,22 @@ describe('UserService', () => {
         expect(result).to.be.null;
       });
     });
+
+    it('should call userRepository.create given username does not exist', () => {
+      return co(function*() {
+        const result: User = yield userService.register('demousername2');
+
+        expect(userRepositoryCreateSpy.calledOnce).to.be.true;
+      });
+    });
+
+    it('should not call userRepository.create given username does exist', () => {
+      return co(function*() {
+        const result: User = yield userService.register('demousername1');
+
+        expect(userRepositoryCreateSpy.notCalled).to.be.true;
+      });
+    });
   });
 
   describe('find', () => {
@@ -76,12 +95,12 @@ describe('UserService', () => {
       const userRepository = new UserRepository();
 
       sinon.stub(userRepository, 'findByUsername').callsFake((username: string) => {
-                if (username === 'demousername1') {
-                    return Promise.resolve(new User(null, null, null, null, null, null, null));
-                }else {
-                   return Promise.resolve(null);
-                }
-            });
+        if (username === 'demousername1') {
+          return Promise.resolve(new User(null, null, null, null, null, null, null));
+        } else {
+          return Promise.resolve(null);
+        }
+      });
 
       userService = new UserService('secretkey', userRepository);
 
@@ -101,6 +120,60 @@ describe('UserService', () => {
         const result: User = yield userService.register('demousername1');
 
         expect(result).to.be.null;
+      });
+    });
+  });
+
+  describe('login', () => {
+    let userService: UserService = null;
+    let userRepositoryUpdateSpy: sinon.SinonSpy = null;
+
+    beforeEach(() => {
+      const userRepository = new UserRepository();
+
+      sinon.stub(userRepository, 'findByUsername').callsFake((username: string) => {
+        if (username === 'demousername1') {
+          return Promise.resolve(new User(null, null, null, null, null, null, null));
+        } else {
+          return Promise.resolve(null);
+        }
+      });
+
+      userRepositoryUpdateSpy = sinon.spy(userRepository, "update");
+
+      userService = new UserService('secretkey', userRepository);
+
+    });
+
+    it('should return true given username does exist', () => {
+      return co(function*() {
+        const result: User = yield userService.login('demousername1');
+
+        expect(result).to.be.true;
+      });
+    });
+
+    it('should return false given username does not exist', () => {
+      return co(function*() {
+        const result: User = yield userService.login('demousername2');
+
+        expect(result).to.be.false;
+      });
+    });
+
+    it('should call userRepository.update given username does exist', () => {
+      return co(function*() {
+        const result: User = yield userService.login('demousername1');
+
+        expect(userRepositoryUpdateSpy.calledOnce).to.be.true;
+      });
+    });
+
+    it('should not call userRepository.update given username does not exist', () => {
+      return co(function*() {
+        const result: User = yield userService.login('demousername2');
+
+        expect(userRepositoryUpdateSpy.notCalled).to.be.true;
       });
     });
   });
