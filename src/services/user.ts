@@ -26,7 +26,7 @@ export class UserService {
 
     public register(username: string): Promise<User> {
         const self = this;
-        return co(function* () {
+        return co(function*() {
             const user: User = yield self.userRepository.findByUsername(username);
 
             if (user !== null) {
@@ -51,7 +51,7 @@ export class UserService {
 
     public login(username: string): Promise<boolean> {
         const self = this;
-        return co(function* () {
+        return co(function*() {
             const user: User = yield self.userRepository.findByUsername(username);
 
             if (user === null) {
@@ -79,9 +79,9 @@ export class UserService {
 
             const sg = require('sendgrid')(this.decryptSendGridApiKey());
             const request = sg.emptyRequest({
+                body: mail.toJSON(),
                 method: 'POST',
                 path: '/v3/mail/send',
-                body: mail.toJSON()
             });
 
             sg.API(request, (error: Error, response: any) => {
@@ -90,7 +90,7 @@ export class UserService {
                     reject(error);
                     return;
                 }
-                
+
                 resolve(true);
             });
         });
