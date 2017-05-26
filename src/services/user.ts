@@ -67,7 +67,33 @@ export class UserService {
     }
 
     private sendEmailForVerification(emailAddress: string): Promise<boolean> {
-        return Promise.resolve(true);
+        return this.sendEmail('developersworkspace@gmail.com', 'Hello World from the SendGrid Node.js Library!', 'Hello, Email!');
+    }
+
+    private sendEmail(toEmailAddress: string, subject: string, body: string): Promise<boolean> {
+        return new Promise((resolve: (result: boolean) => void, reject: (err: Error) => void) => {
+            const helper = require('sendgrid').mail;
+
+            const content = new helper.Content('text/plain', body);
+            const mail = new helper.Mail(new helper.Email('noreply@developersworkspace.co.za'), subject, new helper.Email(toEmailAddress), content);
+
+            const sg = require('sendgrid')(this.decryptSendGridApiKey());
+            const request = sg.emptyRequest({
+                method: 'POST',
+                path: '/v3/mail/send',
+                body: mail.toJSON()
+            });
+
+            sg.API(request, (error: Error, response: any) => {
+
+                if (error) {
+                    reject(error);
+                    return;
+                }
+                
+                resolve(true);
+            });
+        });
     }
 
     private decryptSendGridApiKey() {
