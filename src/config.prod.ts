@@ -1,15 +1,11 @@
 export let config = {
-    baseUri: 'http://yourapidomain.com',
-    port: 'yourapiport',
-    web: {
-        uri: 'http://yourdomain.com',
-        port: 'yourport'
-    },
     logging: {
-        enabled: false,
         path: '/logs/',
     },
     db: {
         uri: 'mongodb://mongo:27017/featuretoggle'
     },
+    sendGrid: {
+        apiKey: '0a139705ddafc9ffc2a1f415d176175e68ab70f1acced808f405969f69781a4629b48d8abd690b8d077f175b5928b9c7f1acfca6f21af5eac117b4ead727dc54181f9dcca2'
+    }
 };

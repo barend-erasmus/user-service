@@ -9,6 +9,7 @@ import { IPermissionRepository } from './../repositories/permission';
 import { Permission } from './../models/permission';
 
 export class PermissionService {
+
     constructor(private permissionRepository: IPermissionRepository) {
 
     }
@@ -21,6 +22,16 @@ export class PermissionService {
             yield self.permissionRepository.create(permission);
 
             return permission;
+        });
+    }
+
+    public list(): Promise<Permission> {
+        const self = this;
+        return co(function*() {
+
+            const result: Permission[] = yield self.permissionRepository.list();
+
+            return result;
         });
     }
 }

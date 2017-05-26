@@ -16,18 +16,18 @@ import { User } from './../models/user';
 
 describe('UserService', () => {
 
-  describe('generateEmailVerificationKey', () => {
+  describe('generateEmailAddressVerificationKey', () => {
     let userService: UserService = null;
 
     beforeEach(() => {
       const userRepository = new UserRepository();
 
-      userService = new UserService('secretkey', userRepository);
+      userService = new UserService('sendgridapikey', 'secretkey', userRepository);
 
     });
 
     it('should return email verfication key', () => {
-      const result: EmailVerificationKey = userService.generateEmailVerificationKey('demousername');
+      const result: EmailVerificationKey = userService.generateEmailAddressVerificationKey('demousername');
       expect(result.key).to.be.eq('6e7acc7ac8bab7fd46ce825ba301f3b916b9cef1adeab6bf4b6cd4371d260be2');
       expect(result.username).to.be.eq('demousername');
     });
@@ -36,6 +36,7 @@ describe('UserService', () => {
   describe('register', () => {
     let userService: UserService = null;
     let userRepositoryCreateSpy: sinon.SinonSpy = null;
+    let userServiceSendEmailForVerificationSpy: sinon.SinonSpy = null;
 
     beforeEach(() => {
       const userRepository = new UserRepository();
@@ -50,7 +51,9 @@ describe('UserService', () => {
 
       userRepositoryCreateSpy = sinon.spy(userRepository, "create");
 
-      userService = new UserService('secretkey', userRepository);
+      userService = new UserService('sendgridapikey', 'secretkey', userRepository);
+
+      userServiceSendEmailForVerificationSpy = sinon.spy(userService, 'sendEmailForVerification');
 
     });
 
@@ -86,6 +89,22 @@ describe('UserService', () => {
         expect(userRepositoryCreateSpy.notCalled).to.be.true;
       });
     });
+
+    it('should call userService.sendEmailForVerification given username in email address format', () => {
+      return co(function*() {
+        const result: User = yield userService.register('demousername@example.com');
+
+        expect(userServiceSendEmailForVerificationSpy.calledOnce).to.be.true;
+      });
+    });
+
+    it('should not call userService.sendEmailForVerification given username in non email address format', () => {
+      return co(function*() {
+        const result: User = yield userService.register('demousername');
+
+        expect(userServiceSendEmailForVerificationSpy.notCalled).to.be.true;
+      });
+    });
   });
 
   describe('find', () => {
@@ -102,7 +121,7 @@ describe('UserService', () => {
         }
       });
 
-      userService = new UserService('secretkey', userRepository);
+      userService = new UserService('sendgridapikey', 'secretkey', userRepository);
 
     });
 
@@ -141,7 +160,7 @@ describe('UserService', () => {
 
       userRepositoryUpdateSpy = sinon.spy(userRepository, "update");
 
-      userService = new UserService('secretkey', userRepository);
+      userService = new UserService('sendgridapikey', 'secretkey', userRepository);
 
     });
 
