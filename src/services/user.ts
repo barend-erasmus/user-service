@@ -3,7 +3,7 @@ import * as co from 'co';
 import * as crypto from 'crypto';
 import * as uuid from 'uuid';
 
-// Imports repositories
+// Imports interfaces
 import { IUserRepository } from './../repositories/user';
 
 // Imports models
