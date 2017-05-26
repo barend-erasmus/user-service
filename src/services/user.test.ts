@@ -55,7 +55,7 @@ describe('UserService', () => {
 
       sinon.stub(userService, 'sendEmail').callsFake(() => {
         return Promise.resolve(true);
-      })
+      });
 
       userServiceSendEmailForVerificationSpy = sinon.spy(userService, 'sendEmailForVerification');
 
