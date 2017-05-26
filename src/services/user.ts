@@ -66,6 +66,29 @@ export class UserService {
         });
     }
 
+    public verifyUserEmailAddress(username: string, key: string): Promise<boolean> {
+        const self = this;
+        return co(function*() {
+            const user: User = yield self.userRepository.findByUsername(username);
+
+            if (user === null) {
+                return false;
+            }
+
+            const emailVerificationKey = self.generateEmailAddressVerificationKey(username);
+
+            if (emailVerificationKey.key !== key) {
+                return false;
+            }
+
+            user.isVerified = true;
+
+            yield self.userRepository.update(user);
+
+            return true;
+        });
+    }
+
     private sendEmailForVerification(emailAddress: string): Promise<boolean> {
         return this.sendEmail('developersworkspace@gmail.com', 'Hello World from the SendGrid Node.js Library!', 'Hello, Email!');
     }

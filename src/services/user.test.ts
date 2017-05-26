@@ -33,6 +33,46 @@ describe('UserService', () => {
     });
   });
 
+  describe('verifyUserEmailAddress', () => {
+    let userService: UserService = null;
+
+    beforeEach(() => {
+      const userRepository = new UserRepository();
+
+      sinon.stub(userRepository, 'findByUsername').callsFake((username: string) => {
+        if (username === 'demousername1') {
+          return Promise.resolve(new User(null, null, null, null, null, null, null));
+        } else {
+          return Promise.resolve(null);
+        }
+      });
+
+      userService = new UserService('sendgridapikey', 'secretkey', userRepository);
+
+    });
+
+    it('should return true given existing user and valid key', () => {
+      return co(function*() {
+        const result: boolean = yield userService.verifyUserEmailAddress('demousername1', userService.generateEmailAddressVerificationKey('demousername1').key);
+        expect(result).to.be.true;
+      });
+    });
+
+    it('should return false given non-existing user and valid key', () => {
+      return co(function*() {
+        const result: boolean = yield userService.verifyUserEmailAddress('demousername2', userService.generateEmailAddressVerificationKey('demousername2').key);
+        expect(result).to.be.false;
+      });
+    });
+
+    it('should return false given existing user and invalid key', () => {
+      return co(function*() {
+        const result: boolean = yield userService.verifyUserEmailAddress('demousername1', userService.generateEmailAddressVerificationKey('demousername2').key);
+        expect(result).to.be.false;
+      });
+    });
+  });
+
   describe('register', () => {
     let userService: UserService = null;
     let userRepositoryCreateSpy: sinon.SinonSpy = null;
