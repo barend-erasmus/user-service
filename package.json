@@ -27,6 +27,7 @@
     "crypto": "0.0.3",
     "express": "^4.15.3",
     "express-winston": "^2.4.0",
+    "mongodb": "^2.2.27",
     "path": "^0.12.7",
     "sendgrid": "^5.1.0",
     "uuid": "^3.0.1",
@@ -35,6 +36,7 @@
   "devDependencies": {
     "@types/chai": "^3.4.34",
     "@types/mocha": "^2.2.38",
+    "@types/mongodb": "^2.2.2",
     "@types/node": "^7.0.18",
     "@types/sinon": "^2.1.2",
     "@types/supertest": "^2.0.0",
