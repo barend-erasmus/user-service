@@ -3,6 +3,11 @@ import { UserPermission } from './user-permission';
 import { UserRole } from './user-role';
 
 export class User {
+
+    public static mapUser(x: any): User {
+        return new User(x.id, x.username, x.emailAddress, x.permissions.map((y) => UserPermission.mapUserPermission(y)), x.roles.map((y) => UserRole.mapUserRole(y)), x.isVerified, x.lastLoginTimestamp);
+    }
+
     constructor(
         public id: string,
         public username: string,
@@ -12,9 +17,5 @@ export class User {
         public isVerified: boolean,
         public lastLoginTimestamp: number) {
 
-    }
-
-    public static mapUser(x: any): User {
-        return new User(x.id, x.username, x.emailAddress, x.permissions.map((y) => UserPermission.mapUserPermission(y)), x.roles.map((y) => UserRole.mapUserRole(y)), x.isVerified, x.lastLoginTimestamp);
     }
 }
