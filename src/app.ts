@@ -1,6 +1,6 @@
 // Imports
 import express = require("express");
-// import { IRepositoryFactory } from './repositories/repository-factory';
+import { IRepositoryFactory } from './repositories/repository-factory';
 
 // Imports middleware
 import bodyParser = require('body-parser');
@@ -8,20 +8,20 @@ import * as cors from 'cors';
 import expressWinston = require('express-winston');
 
 // Imports routes
-// import { FeaturesRouter } from './routes/features';
+import { UsersRouter } from './routes/user';
 
 // Imports logger
 import { logger } from './logger';
 
 // Imports factories
-// import { RepositoryFactory } from './repositories/mongo/repository-factory';
+import { RepositoryFactory } from './repositories/mongo/repository-factory';
 
 // Imports configurations
 import { config } from './config';
 
 export class UserApi {
 
-    // public static repositoryFactory: IRepositoryFactory;
+    public static repositoryFactory: IRepositoryFactory;
 
     constructor(private app: express.Express, private port: number) {
 
@@ -57,9 +57,7 @@ export class UserApi {
     }
 
     private configureRoutes(app: express.Express) {
-        // app.use("/api/projects", new ProjectsRouter().GetRouter());
-        // app.use("/api/features", new FeaturesRouter().GetRouter());
-        // app.use("/api/groups", new GroupsRouter().GetRouter());
+        app.use("/api/users", new UsersRouter().GetRouter());
     }
 
     private configureErrorHandling(app: express.Express) {
@@ -76,7 +74,7 @@ export class UserApi {
 
 const port = process.env.PORT | 3000;
 
-// UserApi.repositoryFactory = new RepositoryFactory();
+UserApi.repositoryFactory = new RepositoryFactory();
 const api = new UserApi(express(), port);
 api.run();
 logger.info(`Listening on ${port}`);

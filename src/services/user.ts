@@ -45,8 +45,12 @@ export class UserService {
         });
     }
 
-    public find(username): Promise<User> {
+    public find(username: string): Promise<User> {
         return this.userRepository.findByUsername(username);
+    }
+
+    public list(): Promise<User[]> {
+        return this.userRepository.list();
     }
 
     public login(username: string): Promise<boolean> {

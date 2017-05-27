@@ -1,4 +1,5 @@
 export let config = {
+    secret: 'hello world',
     logging: {
         path: './',
     },

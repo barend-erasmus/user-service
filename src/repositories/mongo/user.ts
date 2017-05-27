@@ -126,6 +126,10 @@ export class UserRepository implements IUserRepository {
 
             db.close();
 
+            if (user === null) {
+                return null;
+            }
+
             return User.mapUser(user);
         });
     }
