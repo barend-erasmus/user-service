@@ -1,11 +1,11 @@
 // Imports
 import * as co from 'co';
 import * as crypto from 'crypto';
-import * as uuid from 'uuid';
 import * as fs from 'fs-extra';
-import * as path from 'path';
 import * as handlebars from 'handlebars';
 import * as inlineCss from 'inline-css';
+import * as path from 'path';
+import * as uuid from 'uuid';
 
 // Imports interfaces
 import { IUserRepository } from './../repositories/user';
@@ -109,7 +109,7 @@ export class UserService {
             const compiledHtml = template(html);
 
             const inlineCssHtml = yield inlineCss(compiledHtml, {
-                url: 'http://localhost:3000'
+                url: 'http://localhost:3000',
             });
 
             const result = yield self.sendEmail('developersworkspace@gmail.com', 'Please verify your email address', inlineCssHtml);
