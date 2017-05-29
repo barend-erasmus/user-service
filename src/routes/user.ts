@@ -36,6 +36,7 @@ export class UsersRouter {
 
         this.router.post('/register', this.register);
         this.router.post('/login', this.login);
+        this.router.get('/verify', this.verify);
     }
 
     public GetRouter() {
@@ -66,6 +67,17 @@ export class UsersRouter {
             const users: User[] = yield userService.list();
 
             res.send(users);
+        });
+    }
+
+    private verify(req: Request, res: Response, next: () => void) {
+        co(function*() {
+            const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(config);
+            const userService = new UserService(config.sendGrid.apiKey, config.secret, userRepository);
+
+            const result: boolean = yield userService.verifyUserEmailAddress(req.query.username, req.query.key);
+
+            res.redirect(req.query.redirectUri);
         });
     }
 
