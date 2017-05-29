@@ -2,6 +2,10 @@
 import * as co from 'co';
 import * as crypto from 'crypto';
 import * as uuid from 'uuid';
+import * as fs from 'fs-extra';
+import * as path from 'path';
+import * as handlebars from 'handlebars';
+import * as inlineCss from 'inline-css';
 
 // Imports interfaces
 import { IUserRepository } from './../repositories/user';
@@ -94,14 +98,31 @@ export class UserService {
     }
 
     private sendEmailForVerification(emailAddress: string): Promise<boolean> {
-        return this.sendEmail('developersworkspace@gmail.com', 'Hello World from the SendGrid Node.js Library!', 'Hello, Email!');
+
+        const self = this;
+        return co(function*() {
+
+            const html = yield fs.readFile(path.join(__dirname, '../templates/email/verification.html'), 'utf8');
+
+            const template = handlebars.compile(html);
+
+            const compiledHtml = template(html);
+
+            const inlineCssHtml = yield inlineCss(compiledHtml, {
+                url: 'http://localhost:3000'
+            });
+
+            const result = yield self.sendEmail('developersworkspace@gmail.com', 'Please verify your email address', inlineCssHtml);
+
+            return true;
+        });
     }
 
     private sendEmail(toEmailAddress: string, subject: string, body: string): Promise<boolean> {
         return new Promise((resolve: (result: boolean) => void, reject: (err: Error) => void) => {
             const helper = require('sendgrid').mail;
 
-            const content = new helper.Content('text/plain', body);
+            const content = new helper.Content('text/html', body);
             const mail = new helper.Mail(new helper.Email('noreply@developersworkspace.co.za'), subject, new helper.Email(toEmailAddress), content);
 
             const sg = require('sendgrid')(this.decryptSendGridApiKey());

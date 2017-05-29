@@ -44,7 +44,7 @@ export class UsersRouter {
 
     private find(req: Request, res: Response, next: () => void) {
         co(function*() {
-            const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(null);
+            const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(config);
             const userService = new UserService(config.sendGrid.apiKey, config.secret, userRepository);
 
             const user: User = yield userService.find(req.query.username);
@@ -60,7 +60,7 @@ export class UsersRouter {
 
     private list(req: Request, res: Response, next: () => void) {
         co(function*() {
-            const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(null);
+            const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(config);
             const userService = new UserService(config.sendGrid.apiKey, config.secret, userRepository);
 
             const users: User[] = yield userService.list();
@@ -71,7 +71,7 @@ export class UsersRouter {
 
     private register(req: Request, res: Response, next: () => void) {
         co(function*() {
-            const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(null);
+            const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(config);
             const userService = new UserService(config.sendGrid.apiKey, config.secret, userRepository);
 
             const user: User = yield userService.register(req.body.username);
@@ -87,7 +87,7 @@ export class UsersRouter {
 
     private login(req: Request, res: Response, next: () => void) {
         co(function*() {
-            const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(null);
+            const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(config);
             const userService = new UserService(config.sendGrid.apiKey, config.secret, userRepository);
 
             const result: boolean = yield userService.login(req.body.username);

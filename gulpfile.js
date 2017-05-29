@@ -34,6 +34,13 @@ gulp.task('copy:package.json', function () {
         .pipe(gulp.dest('./dist'));
 });
 
+// Copies 'templates' file to build directory
+gulp.task('copy:templates', function () {
+    return gulp
+        .src('./src/templates/**')
+        .pipe(gulp.dest('./dist/templates'));
+});
+
 // Renames config file
 gulp.task('rename:config', function () {
     return gulp.src('./dist/config.prod.js', { base: process.cwd() })
@@ -43,11 +50,11 @@ gulp.task('rename:config', function () {
 
 
 gulp.task('build', function (done) {
-    sequence('clean', 'compile:ts', 'copy:package.json', 'rename:config', done);
+    sequence('clean', 'compile:ts', 'copy:package.json', 'copy:templates', 'rename:config', done);
 });
 
 gulp.task('build:dev', function (done) {
-    sequence('clean', 'compile:ts', 'copy:package.json', done);
+    sequence('clean', 'compile:ts', 'copy:package.json', 'copy:templates', done);
 });
 
 gulp.task('publish:source', function () {
