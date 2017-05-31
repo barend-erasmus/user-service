@@ -13,8 +13,8 @@ import { IPermissionRepository } from './../repositories/permission';
 
 // Imports models
 import { EmailVerificationKey } from './../models/email-verification-key';
-import { User } from './../models/user';
 import { Permission } from './../models/permission';
+import { User } from './../models/user';
 import { UserPermission } from './../models/user-permission';
 
 export class UserService {

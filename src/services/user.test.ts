@@ -5,16 +5,16 @@ import 'mocha';
 import * as sinon from 'sinon';
 
 // Imports repositories
-import { UserRepository } from './../repositories/mock/user';
 import { PermissionRepository } from './../repositories/mock/permission';
+import { UserRepository } from './../repositories/mock/user';
 
 // Imports services
 import { UserService } from './user';
 
 // Imports models
 import { EmailVerificationKey } from './../models/email-verification-key';
-import { User } from './../models/user';
 import { Permission } from './../models/permission';
+import { User } from './../models/user';
 
 describe('UserService', () => {
 

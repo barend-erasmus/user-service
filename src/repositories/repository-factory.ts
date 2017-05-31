@@ -1,6 +1,6 @@
 // Imports interfaces
-import { IUserRepository } from './user';
 import { IPermissionRepository } from './permission';
+import { IUserRepository } from './user';
 
 export interface IRepositoryFactory {
 
