@@ -16,7 +16,11 @@ import { User } from './../models/user';
 
 export class UserService {
 
-    constructor(private sendGridApiKey: string, private secretKey: string, private userRepository: IUserRepository) {
+    constructor(
+        private sendGridApiKey: string,
+        private emailOptions: { address: string, baseUri: string, verificationUrl: string, applicationName: string },
+        private secretKey: string,
+        private userRepository: IUserRepository) {
 
     }
 
@@ -102,14 +106,20 @@ export class UserService {
         const self = this;
         return co(function*() {
 
+            const emailVerificationKey = self.generateEmailAddressVerificationKey(emailAddress);
+
             const html = yield fs.readFile(path.join(__dirname, '../templates/email/verification.html'), 'utf8');
 
             const template = handlebars.compile(html);
 
-            const compiledHtml = template(html);
+            const compiledHtml = template(html, {
+                address: self.emailOptions.address,
+                applicationName: self.emailOptions.applicationName,
+                verificationUri: `${self.emailOptions.verificationUrl}?username=${emailAddress}&key=${emailVerificationKey.key}`,
+            });
 
             const inlineCssHtml = yield inlineCss(compiledHtml, {
-                url: 'http://localhost:3000',
+                url: self.emailOptions.baseUri,
             });
 
             const result = yield self.sendEmail('developersworkspace@gmail.com', 'Please verify your email address', inlineCssHtml);

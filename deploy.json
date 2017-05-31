@@ -1,0 +1,30 @@
+{
+    "machine": {
+        "host": "$host",
+        "username": "$username",
+        "password": "$password"
+    },
+    "commands": [
+        "sudo apt-get update",
+        "curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -",
+        "sudo apt-get install -y nodejs",
+
+        "npm --prefix /opt/user-service install",
+        "docker stop user-service",
+        "docker rm user-service",
+        "docker build --no-cache -t user-service /docker-uploads/user-service",
+        "docker run -d -p 8081:3000 --name user-service -v /logs:/logs -v /opt/user-service:/opt/user-service --link user-service-db:mongo -t user-service"
+    ],
+    "directories": [
+        {
+            "source": "$workspace/dist",
+            "destination": "/opt/user-service"
+        }
+    ],
+    "files": [
+        {
+            "source": "$workspace/Dockerfile",
+            "destination": "/docker-uploads/user-service/Dockerfile"
+        }
+    ]
+}
