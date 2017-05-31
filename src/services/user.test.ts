@@ -22,7 +22,7 @@ describe('UserService', () => {
     beforeEach(() => {
       const userRepository = new UserRepository();
 
-      userService = new UserService('sendgridapikey', 'secretkey', userRepository);
+      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository);
 
     });
 
@@ -47,7 +47,7 @@ describe('UserService', () => {
         }
       });
 
-      userService = new UserService('sendgridapikey', 'secretkey', userRepository);
+      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository);
 
     });
 
@@ -91,7 +91,12 @@ describe('UserService', () => {
 
       userRepositoryCreateSpy = sinon.spy(userRepository, "create");
 
-      userService = new UserService('sendgridapikey', 'secretkey', userRepository);
+      userService = new UserService('sendgridapikey', {
+        address: "Test Address",
+        applicationName: "",
+        baseUri: "http://localhost",
+        verificationUrl: "",
+      }, 'secretkey', userRepository);
 
       sinon.stub(userService, 'sendEmail').callsFake(() => {
         return Promise.resolve(true);
@@ -165,7 +170,7 @@ describe('UserService', () => {
         }
       });
 
-      userService = new UserService('sendgridapikey', 'secretkey', userRepository);
+      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository);
 
     });
 
@@ -204,7 +209,7 @@ describe('UserService', () => {
 
       userRepositoryUpdateSpy = sinon.spy(userRepository, "update");
 
-      userService = new UserService('sendgridapikey', 'secretkey', userRepository);
+      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository);
 
     });
 
