@@ -8,8 +8,8 @@ import * as path from 'path';
 import * as uuid from 'uuid';
 
 // Imports interfaces
-import { IUserRepository } from './../repositories/user';
 import { IPermissionRepository } from './../repositories/permission';
+import { IUserRepository } from './../repositories/user';
 
 // Imports models
 import { EmailVerificationKey } from './../models/email-verification-key';
