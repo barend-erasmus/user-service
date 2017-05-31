@@ -25,7 +25,7 @@ export class PermissionService {
         });
     }
 
-    public list(): Promise<Permission> {
+    public list(): Promise<Permission[]> {
         const self = this;
         return co(function*() {
 

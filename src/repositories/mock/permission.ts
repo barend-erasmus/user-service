@@ -1,7 +1,10 @@
+// Imports interfaces
+import { IPermissionRepository } from './../permission';
+
 // Imports models
 import { Permission } from './../../models/permission';
 
-export class PermissionRepository {
+export class PermissionRepository implements IPermissionRepository{
 
     public create(permission: Permission): Promise<boolean> {
         return Promise.resolve(true);

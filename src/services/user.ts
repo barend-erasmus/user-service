@@ -9,10 +9,13 @@ import * as uuid from 'uuid';
 
 // Imports interfaces
 import { IUserRepository } from './../repositories/user';
+import { IPermissionRepository } from './../repositories/permission';
 
 // Imports models
 import { EmailVerificationKey } from './../models/email-verification-key';
 import { User } from './../models/user';
+import { Permission } from './../models/permission';
+import { UserPermission } from './../models/user-permission';
 
 export class UserService {
 
@@ -20,7 +23,8 @@ export class UserService {
         private sendGridApiKey: string,
         private emailOptions: { address: string, baseUri: string, verificationUrl: string, applicationName: string },
         private secretKey: string,
-        private userRepository: IUserRepository) {
+        private userRepository: IUserRepository,
+        private permissionRepository: IPermissionRepository) {
 
     }
 
@@ -94,6 +98,29 @@ export class UserService {
             }
 
             user.isVerified = true;
+
+            yield self.userRepository.update(user);
+
+            return true;
+        });
+    }
+
+    public addPermission(username: string, permissionId: string): Promise<boolean> {
+        const self = this;
+        return co(function*() {
+            const user: User = yield self.userRepository.findByUsername(username);
+
+            if (user === null) {
+                return false;
+            }
+
+            const permission: Permission = yield self.permissionRepository.findById(permissionId);
+
+            if (permission === null) {
+                return false;
+            }
+
+            user.permissions.push(new UserPermission(permission.id, permission.name));
 
             yield self.userRepository.update(user);
 

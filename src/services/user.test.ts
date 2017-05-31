@@ -6,6 +6,7 @@ import * as sinon from 'sinon';
 
 // Imports repositories
 import { UserRepository } from './../repositories/mock/user';
+import { PermissionRepository } from './../repositories/mock/permission';
 
 // Imports services
 import { UserService } from './user';
@@ -13,6 +14,7 @@ import { UserService } from './user';
 // Imports models
 import { EmailVerificationKey } from './../models/email-verification-key';
 import { User } from './../models/user';
+import { Permission } from './../models/permission';
 
 describe('UserService', () => {
 
@@ -22,7 +24,7 @@ describe('UserService', () => {
     beforeEach(() => {
       const userRepository = new UserRepository();
 
-      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository);
+      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository, null);
 
     });
 
@@ -47,7 +49,7 @@ describe('UserService', () => {
         }
       });
 
-      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository);
+      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository, null);
 
     });
 
@@ -96,7 +98,7 @@ describe('UserService', () => {
         applicationName: "",
         baseUri: "http://localhost",
         verificationUrl: "",
-      }, 'secretkey', userRepository);
+      }, 'secretkey', userRepository, null);
 
       sinon.stub(userService, 'sendEmail').callsFake(() => {
         return Promise.resolve(true);
@@ -170,7 +172,7 @@ describe('UserService', () => {
         }
       });
 
-      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository);
+      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository, null);
 
     });
 
@@ -209,7 +211,7 @@ describe('UserService', () => {
 
       userRepositoryUpdateSpy = sinon.spy(userRepository, "update");
 
-      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository);
+      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository, null);
 
     });
 
@@ -244,6 +246,86 @@ describe('UserService', () => {
         expect(userRepositoryUpdateSpy.notCalled).to.be.true;
       });
     });
+  });
+
+  describe('addPermssion', () => {
+    let userService: UserService = null;
+    let userRepositoryUpdateSpy: sinon.SinonSpy = null;
+
+    beforeEach(() => {
+      const userRepository = new UserRepository();
+      const permissionRepository = new PermissionRepository();
+
+      sinon.stub(userRepository, 'findByUsername').callsFake((username: string) => {
+        if (username === 'demousername1') {
+          return Promise.resolve(new User(null, null, null, [], null, null, null));
+        } else {
+          return Promise.resolve(null);
+        }
+      });
+
+      sinon.stub(permissionRepository, 'findById').callsFake((id: string) => {
+        if (id === 'permission1') {
+          return Promise.resolve(new Permission('permission1', 'Permission1'));
+        } else {
+          return Promise.resolve(null);
+        }
+      });
+
+      userRepositoryUpdateSpy = sinon.spy(userRepository, 'update');
+
+      userService = new UserService('sendgridapikey', null, 'secretkey', userRepository, permissionRepository);
+
+    });
+
+    it('should return false given username does not exist', () => {
+      return co(function*() {
+        const result: boolean = yield userService.addPermission('demousername2', 'permission1');
+
+        expect(result).to.be.false;
+      });
+    });
+
+    it('should return true given username does exist', () => {
+      return co(function*() {
+        const result: boolean = yield userService.addPermission('demousername1', 'permission1');
+
+        expect(result).to.be.true;
+      });
+    });
+
+    it('should return false given permissionId does not exist', () => {
+      return co(function*() {
+        const result: boolean = yield userService.addPermission('demousername1', 'permission2');
+
+        expect(result).to.be.false;
+      });
+    });
+
+    it('should return true given permissionId does exist', () => {
+      return co(function*() {
+        const result: boolean = yield userService.addPermission('demousername1', 'permission1');
+
+        expect(result).to.be.true;
+      });
+    });
+
+    it('should call userRepository.update given permissionId and username does exist', () => {
+      return co(function*() {
+        const result: boolean = yield userService.addPermission('demousername1', 'permission1');
+
+        expect(userRepositoryUpdateSpy.calledOnce).to.be.true;
+      });
+    });
+
+    it('should call not userRepository.update given permissionId and username does not exist', () => {
+      return co(function*() {
+        const result: boolean = yield userService.addPermission('demousername2', 'permission2');
+
+        expect(userRepositoryUpdateSpy.notCalled).to.be.true;
+      });
+    });
+
   });
 
 });
