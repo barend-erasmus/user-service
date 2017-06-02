@@ -57,7 +57,22 @@ export class UserApi {
     }
 
     private configureRoutes(app: express.Express) {
-        app.use("/api/users", new UsersRouter().GetRouter());
+
+        app.get('/api/users', (req, res, next) => {
+
+            if (req.query.username !== undefined) {
+
+                return UsersRouter.find(req, res, next);
+
+            } else {
+                return UsersRouter.list(req, res, next);
+            }
+        });
+
+        app.post('/api/users/register', UsersRouter.register);
+        app.post('/api/users/login', UsersRouter.login);
+        app.get('/api/users/verify', UsersRouter.verify);
+
     }
 
     private configureErrorHandling(app: express.Express) {

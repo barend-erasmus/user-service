@@ -20,30 +20,9 @@ import { User } from './../models/user';
 
 export class UsersRouter {
 
-    private router = express.Router();
+    private static router = express.Router();
 
-    constructor() {
-        this.router.get('/', (req, res, next) => {
-
-            if (req.query.username !== undefined) {
-
-                return this.find(req, res, next);
-
-            } else {
-                return this.list(req, res, next);
-            }
-        });
-
-        this.router.post('/register', this.register);
-        this.router.post('/login', this.login);
-        this.router.get('/verify', this.verify);
-    }
-
-    public GetRouter() {
-        return this.router;
-    }
-
-    private find(req: Request, res: Response, next: () => void) {
+    public static find(req: Request, res: Response, next: () => void) {
         co(function*() {
             const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(config);
             const permissionRepository = UserApi.repositoryFactory.getInstanceOfPermissionRepository(config);
@@ -60,7 +39,7 @@ export class UsersRouter {
         });
     }
 
-    private list(req: Request, res: Response, next: () => void) {
+    public static list(req: Request, res: Response, next: () => void) {
         co(function*() {
             const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(config);
             const permissionRepository = UserApi.repositoryFactory.getInstanceOfPermissionRepository(config);
@@ -72,7 +51,7 @@ export class UsersRouter {
         });
     }
 
-    private verify(req: Request, res: Response, next: () => void) {
+    public static verify(req: Request, res: Response, next: () => void) {
         co(function*() {
             const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(config);
             const permissionRepository = UserApi.repositoryFactory.getInstanceOfPermissionRepository(config);
@@ -84,7 +63,7 @@ export class UsersRouter {
         });
     }
 
-    private register(req: Request, res: Response, next: () => void) {
+    public static register(req: Request, res: Response, next: () => void) {
         co(function*() {
             const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(config);
             const permissionRepository = UserApi.repositoryFactory.getInstanceOfPermissionRepository(config);
@@ -101,7 +80,7 @@ export class UsersRouter {
         });
     }
 
-    private login(req: Request, res: Response, next: () => void) {
+    public static login(req: Request, res: Response, next: () => void) {
         co(function*() {
             const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(config);
             const permissionRepository = UserApi.repositoryFactory.getInstanceOfPermissionRepository(config);
