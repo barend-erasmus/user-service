@@ -5,7 +5,7 @@ import * as winston from 'winston';
 // Import configurations
 let config = require('./config').config;
 
-let argv = require('yargs').argv;
+const argv = require('yargs').argv;
 
 if (argv.prod) {
   config = require('./config.prod').config;
