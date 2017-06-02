@@ -20,8 +20,6 @@ import { User } from './../models/user';
 
 export class UsersRouter {
 
-    private static router = express.Router();
-
     public static find(req: Request, res: Response, next: () => void) {
         co(function*() {
             const userRepository = UserApi.repositoryFactory.getInstanceOfUserRepository(config);
