@@ -16,8 +16,14 @@ import { logger } from './logger';
 // Imports factories
 import { RepositoryFactory } from './repositories/mongo/repository-factory';
 
-// Imports configurations
-import { config } from './config';
+// Import configurations
+let config = require('./config').config;
+
+let argv = require('yargs').argv;
+
+if (argv.prod) {
+  config = require('./config.prod').config;
+}
 
 export class UserApi {
 
